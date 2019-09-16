@@ -1,15 +1,15 @@
 from django.shortcuts import render
 
-# from rest_framework import generics
-# from .models import Snippet
-# from .serializers import SnippetSerializer
-#
-#
-# class SnippetList(generics.ListCreateAPIView):
-#     queryset = Snippet.objects.all()
-#     serializer_class = SnippetSerializer
-#
-#
-# class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Snippet.objects.all()
-#     serializer_class = SnippetSerializer
+from rest_framework import generics
+from .models import Group
+from .serializers import GroupSerializer
+
+
+class GroupList(generics.ListCreateAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
+class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer

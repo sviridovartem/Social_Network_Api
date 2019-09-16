@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Group(models.Model):
-    author = models.CharField(max_length=100, blank=True, default='',)
-    name = models.CharField(max_length=100, blank=True, default='', unique=True)
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         ordering = ('name',)
