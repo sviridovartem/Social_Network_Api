@@ -5,4 +5,4 @@ from .models import Friendship
 class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
-        fields = ('first name', 'second name', 'first accepted', 'second accepted')
+        fields = ('id', 'first_user', 'second_user', 'first_accepted', 'second_accepted')
