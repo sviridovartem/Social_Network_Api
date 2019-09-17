@@ -8,5 +8,8 @@ class Group(models.Model):
     class Meta:
         ordering = ('name',)
 
+    def save(self, *args, **kwargs):
+        super(Group, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name

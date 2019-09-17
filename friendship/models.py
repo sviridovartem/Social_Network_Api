@@ -7,6 +7,9 @@ class Friendship(models.Model):
     first_accepted = models.BooleanField(default=False)
     second_accepted = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         if self.first_accepted and self.second_accepted:
             return f"between {self.first_user} and {self.second_user}"
