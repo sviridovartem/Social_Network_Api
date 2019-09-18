@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from .serializers import FriendshipSerializer, FriendshipCreateSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 import datetime
 import json
 
@@ -31,8 +31,33 @@ class FriendshipDetail(viewsets.ModelViewSet):
     queryset = Friendship.objects.all()
     serializer_class = FriendshipCreateSerializer
 
-    @action(detail=True, url_path='accept_friendship', url_name='accept-friendship', methods=['post'])
+    @action(detail=True, url_path='accept_friendship', url_name='accept_friendship', methods=['get'])
     def accept_friendship(self, request, pk):
-        self.get_object()
+        friendship_info = self.get_object()
+
+        if friendship_info.first_user == friendship_info.second_user:
+            return Response(f"You have got bad friends {friendship_info.first_user} and {friendship_info.second_user}",
+                            status=status.HTTP_401_UNAUTHORIZED)
+        elif friendship_info.first_user.id == request.user.id or friendship_info.second_user.id == request.user.id:
+            return Response(
+                f"Friendship id: {friendship_info.id} "
+                f"Friendship first user {friendship_info.first_user.username},  "
+                f"Friendship second user {friendship_info.second_user.username},  "
+                f"{request.user.id}", status=status.HTTP_200_OK)
+        else:
+            return Response(f"Permission denied", status=status.HTTP_401_UNAUTHORIZED)
         # serializer.save(second_accepted=True)
-        return Response("test")
+
+
+
+
+    @action(detail=True, url_path='delete_friendship', url_name='delete_friendship', methods=['DELETE'])
+    def delete_friendship(self, request, pk):
+        friendship = self.get_object()
+
+        if friendship.first_user.id == request.user.id or friendship.second_user.id == request.user.id:
+            friendship.delete()
+            return Response(f"Friendship with was deleted", status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(f"Permission denied", status=status.HTTP_401_UNAUTHORIZED)
+
