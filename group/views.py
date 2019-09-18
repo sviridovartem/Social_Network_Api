@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 class GroupList(generics.ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(author=self.request.user)

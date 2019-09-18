@@ -8,7 +8,6 @@ router.register(r'', views.GroupDetail)
 
 urlpatterns = [
     path('', views.GroupList.as_view()),
-    # path('<int:pk>/', views.GroupDetail.as_view()),
     path('', include(router.urls)),
 ]
 

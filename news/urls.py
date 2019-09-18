@@ -5,10 +5,7 @@ from news import views
 urlpatterns = [
     path('', views.NewsList.as_view()),
     path('<int:pk>/', views.NewsDetail.as_view()),
-
-    # Get news for user
-    # Get news of the groups that I’m subscribed to (has filters by date from and to
-
+    path('users_news/', views.UserNewsList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

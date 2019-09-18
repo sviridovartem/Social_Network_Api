@@ -3,15 +3,19 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework import generics
 from django.db.models import Q
+from rest_framework import generics, permissions, viewsets, status
+
 from .models import Friendship
 from .serializers import FriendshipSerializer, FriendshipCreateSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from group.permissions import IsOwnerOrReadOnly
 
 
 class FriendshipList(generics.ListCreateAPIView):
     queryset = Friendship.objects.all()
     serializer_class = FriendshipSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(Q(first_user=self.request.user) | Q(second_user=self.request.user))
@@ -25,6 +29,8 @@ class FriendshipList(generics.ListCreateAPIView):
 class FriendshipDetail(viewsets.ModelViewSet):
     queryset = Friendship.objects.all()
     serializer_class = FriendshipCreateSerializer
+    permission_classes = (permissions.IsAuthenticated,
+                          IsOwnerOrReadOnly)
 
     @action(detail=True, url_path='accept_friendship', url_name='accept_friendship', methods=['POST'])
     def accept_friendship(self, request, pk):

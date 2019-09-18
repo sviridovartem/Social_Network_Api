@@ -11,16 +11,6 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'author')
 
 
-# class GroupCreateSerializer(serializers.ModelSerializer):
-#     author = serializers.ReadOnlyField(source='author.username')
-#
-#     class Meta:
-#         model = Group
-#         fields = 'name'
-#
-#
-
-
 class UserSerializer(serializers.ModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Group.objects.all())

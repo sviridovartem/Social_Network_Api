@@ -12,5 +12,3 @@ class FriendshipCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
         fields = ('id', 'second_user')
-
-
