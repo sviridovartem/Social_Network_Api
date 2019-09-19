@@ -1,4 +1,6 @@
+from django.http import Http404
 from rest_framework import generics, permissions, status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from subscription.models import Subscription
 from group.models import Group
@@ -14,17 +16,16 @@ class NewsList(generics.ListCreateAPIView):
     serializer_class = NewsSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         serializer = NewsSerializer(data=request.data)
         info = request.data
-
-        if Group.objects.get(id=info['group'], author=request.user):
-            if serializer.is_valid():
+        try:
+            Group.objects.get(id=info['group'], author=request.user)
+            if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(f"permission denied", status=status.HTTP_403_FORBIDDEN)
-
+        except Group.DoesNotExist:
+            return Response(status=404)
         # todo check and fix
 
 
@@ -41,8 +42,8 @@ class UserNewsList(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         # Subscription.objects.get_queryset().filter(user=request.user)
-        temp = set([int(sub_id.group_id) for sub_id in Subscription.objects.get_queryset().filter(user=request.user)])
-        queryset = self.get_queryset().filter(group__in=temp)
+        s = Subscription.objects.filter(user=request.user).values_list('group_id')
+        queryset = self.get_queryset().filter(group__in=s)
 
         # Group.objects.get(id=info['group'], author=request.user)
 
