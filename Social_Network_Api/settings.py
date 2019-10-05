@@ -22,9 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'a3&u5hpr2is_^2t_yhr80&1sqq+l0$7lu+wc#e=c*r2_t3sjn1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+if os.getenv('DJANGO_ENV') == 'prod':
+    DEBUG = False
+    ALLOWED_HOSTS = ['.snakeoil.com']
+    # ...
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -77,9 +81,14 @@ WSGI_APPLICATION = 'Social_Network_Api.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Social_Network_Api',
+        'USER': 'postgres',
+        'PASSWORD': 'Vesper582',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
